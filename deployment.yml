@@ -1,0 +1,50 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: masterplan
+    kyma-grafana: enabled
+  name: masterplan
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: masterplan
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: masterplan
+        kyma-grafana: enabled
+    spec:
+      containers:
+        - image: hagarrnabil/masterplan:latest
+          name: masterplan
+          ports:
+            - containerPort: 80
+          envFrom:
+            - secretRef:
+                name: masterplan
+                optional: true
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: masterplan
+  name: masterplan
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8000
+  selector:
+    app: masterplan
+  type: ClusterIP
+status:
+  loadBalancer: {}
